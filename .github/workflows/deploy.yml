@@ -18,7 +18,29 @@ jobs:
       - name: Build with Maven
         run: mvn clean package -DskipTests
 
-      - name: Upload JAR via SSH
+#      - name: Upload JAR via SSH
+#        uses: appleboy/ssh-action@v1.2.1
+#        with:
+#          host: ${{ secrets.SERVER_IP }}
+#          username: ${{ secrets.SSH_USER }}
+#          key: ${{ secrets.SSH_PRIVATE_KEY }}
+#          script: |
+#            cd /opt/app
+#            kill $(lsof -t -i:8080) || true
+#            nohup java -jar springboot3-demo.jar > nohup.out &
+
+      # 1. 使用 scp-action 上传文件
+      - name: Upload JAR via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "target/simple-0.0.1-SNAPSHOT.jar"  # 本地构建产物路径
+          target: "/opt/app/"  # 服务器目标目录
+
+      # 2. 使用 ssh-action 执行部署命令
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.1
         with:
           host: ${{ secrets.SERVER_IP }}
@@ -27,4 +49,4 @@ jobs:
           script: |
             cd /opt/app
             kill $(lsof -t -i:8080) || true
-            nohup java -jar springboot3-demo.jar > nohup.out &
+            nohup java -jar simple-0.0.1-SNAPSHOT.jar > nohup.out &
