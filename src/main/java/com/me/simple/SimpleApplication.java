@@ -11,7 +11,7 @@ public class SimpleApplication {
 
 	@RequestMapping("/list")
 	public String home() {
-		return "Hello World 123";
+		return "Hello World 123456";
 	}
 
 	public static void main(String[] args) {

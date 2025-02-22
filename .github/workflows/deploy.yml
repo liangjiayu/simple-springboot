@@ -5,7 +5,6 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY: docker.io
   IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/simple-app
 
 jobs:
@@ -33,27 +32,25 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          tags: ${{ env.IMAGE_NAME }}:latest
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
 
     steps:
-      - name: SSH into Server
+      - name: SSH into Server and Deploy
         uses: appleboy/ssh-action@v1.2.1
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            docker pull ${{ env.IMAGE_NAME }}:latest
             docker stop simple-app 2>/dev/null
             docker rm simple-app 2>/dev/null
             docker run -d \
