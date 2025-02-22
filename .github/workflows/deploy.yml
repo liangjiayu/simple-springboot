@@ -51,9 +51,11 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             docker stop simple-app 2>/dev/null
             docker rm simple-app 2>/dev/null
+            docker rmi ${{ env.IMAGE_NAME }}:latest || true
+
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             docker run -d \
               --name simple-app \
               --restart unless-stopped \
