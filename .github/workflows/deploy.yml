@@ -54,8 +54,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-            kill $(lsof -t -i:8080) || true
-            docker rm -f simple-app 2>/dev/null
+            docker stop simple-app 2>/dev/null
+            docker rm simple-app 2>/dev/null
             docker run -d \
               --name simple-app \
               --restart unless-stopped \
