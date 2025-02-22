@@ -58,6 +58,6 @@ jobs:
             docker rm -f simple-app 2>/dev/null
             docker run -d \
               --name simple-app \
-              --restart always \
+              --restart unless-stopped \
               -p 8080:8080 \
               ${{ env.IMAGE_NAME }}:latest
