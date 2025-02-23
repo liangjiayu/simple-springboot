@@ -12,7 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      IMAGE_FULL_NAME: ${{ steps.vars.outputs.IMAGE_FULL_NAME }}
+      IMAGE_FULL_NAME: ${{ steps.vars.outputs.full_name }}
 
     steps:
       - name: Set variable
