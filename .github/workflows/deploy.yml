@@ -15,12 +15,12 @@ jobs:
       IMAGE_FULL_NAME: ${{ steps.vars.outputs.IMAGE_FULL_NAME }}
 
     steps:
-    - name: Set variable
-      id: vars
-      run: |
-        IMAGE_FULL_NAME="${{ env.REGISTRY }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest"
-        echo "IMAGE_FULL_NAME=${IMAGE_FULL_NAME}" >> $GITHUB_OUTPUT
-        echo "IMAGE_FULL_NAME=${IMAGE_FULL_NAME}" >> $GITHUB_ENV
+      - name: Set variable
+        id: vars
+        run: |
+          IMAGE_FULL_NAME="${{ env.REGISTRY }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest"
+          echo "IMAGE_FULL_NAME=${IMAGE_FULL_NAME}" >> $GITHUB_OUTPUT
+          echo "IMAGE_FULL_NAME=${IMAGE_FULL_NAME}" >> $GITHUB_ENV
 
       - name: Checkout code
         uses: actions/checkout@v4
