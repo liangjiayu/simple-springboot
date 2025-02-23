@@ -12,6 +12,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      IMAGE_FULL_NAME: ${{ steps.set_vars.outputs.IMAGE_FULL_NAME }}
 
     steps:
       - name: Set variable
@@ -49,7 +51,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          tags: ${{ env.IMAGE_FULL_NAME }}
+          tags: ${{ needs.build.outputs.IMAGE_FULL_NAME }}
           push: true
 
   deploy:
