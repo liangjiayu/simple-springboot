@@ -18,9 +18,12 @@ jobs:
       - name: Set variable
         id: vars
         run: |
-          IMAGE_FULL_NAME="${{ env.REGISTRY }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest"
-          echo "IMAGE_FULL_NAME=${IMAGE_FULL_NAME}" >> $GITHUB_OUTPUT
-          echo "IMAGE_FULL_NAME=${IMAGE_FULL_NAME}" >> $GITHUB_ENV
+          # 组合完整镜像名称
+          FULL_NAME="docker.io/${{ secrets.DOCKERHUB_USERNAME }}/simple-app"
+          # 设置输出变量（新语法）
+          echo "full_name=$FULL_NAME" >> $GITHUB_OUTPUT
+          # 调试输出
+          echo "Generated image name: $FULL_NAME"
           
 
       - name: Checkout code
@@ -40,9 +43,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     env:
-      IMAGE_FULL_NAME: ${{ needs.build.env.IMAGE_FULL_NAME }}
+      IMAGE_FULL_NAME: ${{ needs.build.outputs.IMAGE_FULL_NAME }}
 
     steps:
+      - name: Show received variable
+        run: |
+          echo "Image name from build job: ${{ needs.build.outputs.IMAGE_FULL_NAME }}"
+      
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
