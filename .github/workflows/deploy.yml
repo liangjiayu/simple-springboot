@@ -52,7 +52,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: push_docker
+    needs: push-docker
 
     steps:
       - name: SSH into Server and Deploy
